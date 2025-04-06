@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Formulario Cédula</title>
+</head>
+<body>
+  <h2>Subir cédula (imagen o PDF)</h2>
+  <form action="https://mrx04.app.n8n.cloud/webhook-test/formulario" method="POST" enctype="multipart/form-data">
+    <input type="file" name="documento" accept="image/*,.pdf" required>
+    <br><br>
+    <button type="submit">Enviar</button>
+  </form>
+</body>
+</html>
