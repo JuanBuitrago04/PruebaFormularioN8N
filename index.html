@@ -2,14 +2,39 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>Formulario Cédula</title>
+  <title>Subir Cédula</title>
 </head>
 <body>
   <h2>Subir cédula (imagen o PDF)</h2>
-  <form action="https://mrx04.app.n8n.cloud/webhook/ocr" method="POST" enctype="multipart/form-data">
+
+  <form id="cedulaForm">
     <input type="file" name="data" accept="image/*,.pdf" required>
-    <br><br>
     <button type="submit">Enviar</button>
   </form>
+
+  <pre id="resultado"></pre>
+
+  <script>
+    const form = document.getElementById('cedulaForm');
+    const resultado = document.getElementById('resultado');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const formData = new FormData(form);
+
+      try {
+        const res = await fetch('https://mrx04.app.n8n.cloud/webhook/ocr', {
+          method: 'POST',
+          body: formData
+        });
+
+        const data = await res.json();
+        resultado.textContent = JSON.stringify(data, null, 2);
+      } catch (err) {
+        resultado.textContent = 'Error al enviar o procesar la cédula.';
+      }
+    });
+  </script>
 </body>
 </html>
