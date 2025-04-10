@@ -2,50 +2,60 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>Subir Cédula</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 20px;
-    }
-    #resultado {
-      margin-top: 20px;
-      padding: 10px;
-      border: 1px solid #ccc;
-      background: #f9f9f9;
-    }
-  </style>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Validación de Cédula</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <h2>Subir cédula (imagen o PDF)</h2>
-  <form id="cedulaForm">
-    <input type="file" name="data" accept="image/*,.pdf" required>
-    <button type="submit">Enviar</button>
-  </form>
-  <div id="resultado"></div>
-
-  <script>
-    document.getElementById('cedulaForm').addEventListener('submit', async function(e) {
-      e.preventDefault();
-      const resultado = document.getElementById('resultado');
-      resultado.textContent = 'Procesando...';
-      const formData = new FormData(this);
-      try {
-        // Cambia la URL aquí si usas la producción:
-        const response = await fetch('https://mrx04.app.n8n.cloud/webhook-test/ocr', {
-          method: 'POST',
-          body: formData
-        });
-        if (!response.ok) {
-          throw new Error(`Error HTTP: ${response.status}`);
-        }
-        const data = await response.json();
-        resultado.innerHTML = `<pre>${JSON.stringify(data, null, 2)}</pre>`;
-      } catch (error) {
-        resultado.textContent = 'Error: ' + error.message;
-        console.error(error);
-      }
-    });
-  </script>
+  <div class="container">
+    <div class="header">
+      <h1>Verificación de Documento de Identidad</h1>
+      <p>Sube una imagen o PDF de tu cédula para procesarla</p>
+    </div>
+    
+    <div class="alert alert-error" id="errorAlert">
+      <i class="fas fa-exclamation-circle"></i> 
+      <span id="errorMessage"></span>
+    </div>
+    
+    <div class="alert alert-success" id="successAlert">
+      <i class="fas fa-check-circle"></i> 
+      <span id="successMessage"></span>
+    </div>
+    
+    <form id="cedulaForm">
+      <div class="upload-area" id="uploadArea">
+        <i class="fas fa-cloud-upload-alt upload-icon"></i>
+        <p class="upload-text">Arrastra y suelta tu documento aquí</p>
+        <p class="upload-hint">o haz clic para seleccionar un archivo</p>
+        <input type="file" name="data" accept="image/*,.pdf" required class="file-input" id="fileInput">
+      </div>
+      
+      <div class="file-preview" id="filePreview">
+        <div id="previewContainer"></div>
+        <p class="file-name" id="fileName"></p>
+        <p class="file-size" id="fileSize"></p>
+      </div>
+      
+      <button type="submit" class="btn" id="submitBtn" disabled>
+        <i class="fas fa-upload btn-icon"></i> Procesar documento
+      </button>
+    </form>
+    
+    <div class="loading" id="loading">
+      <div class="loading-spinner"></div>
+      <p>Procesando tu documento...</p>
+    </div>
+    
+    <div class="resultado" id="resultado">
+      <div class="resultado-header">
+        <i class="fas fa-check-circle resultado-icon" style="color: var(--success-color);"></i>
+        <h3 class="resultado-title">Resultados de la verificación</h3>
+      </div>
+      <div class="resultado-content" id="resultadoContent"></div>
+    </div>
+  </div>
+  <script src="script.js"></script>
 </body>
 </html>
